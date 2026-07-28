@@ -1,0 +1,114 @@
+# Aegis Custom Rules
+# These rules are applied across all analyzed Python files.
+# Files in exclude_paths are skipped for each rule.
+#
+# IMPORTANT: The Aegis codebase itself uses eval/exec/ast patterns
+# for legitimate code inspection. These rules are tuned to avoid
+# false positives when Aegis analyzes itself.
+
+version: "1.0"
+
+rules:
+  # ── Security Rules ──────────────────────────────────────────────────────────
+
+  - id: "custom001"
+    name: "no-dangerous-eval"
+    description: >
+      Detects dangerous use of eval() in user code.
+      NOTE: Excluded from analyzer files that use eval() for code inspection.
+    pattern: "eval("
+    severity: "critical"
+    category: "security"
+    exclude_paths:
+      - "synexian/analyzers/"
+      - "synexian/utils/ast_utils.py"
+      - "tests/"
+      - "scripts/"
+
+  - id: "custom002"
+    name: "no-dangerous-exec"
+    description: >
+      Detects dangerous use of exec() in user code.
+      NOTE: Excluded from analyzer files that use exec() for code inspection.
+    pattern: "exec("
+    severity: "critical"
+    category: "security"
+    exclude_paths:
+      - "synexian/analyzers/"
+      - "synexian/utils/ast_utils.py"
+      - "tests/"
+      - "scripts/"
+
+  - id: "custom003"
+    name: "no-hardcoded-passwords"
+    description: "Detects hardcoded password strings in source code."
+    patterns:
+      - "password = \""
+      - "PASSWORD = \""
+      - "passwd = \""
+      - "secret = \""
+    severity: "critical"
+    category: "security"
+    exclude_paths:
+      - "tests/"
+      - ".env.example"
+
+  - id: "custom004"
+    name: "no-debug-true-in-production"
+    description: "Detects DEBUG=True which should never be in production code."
+    pattern: "DEBUG = True"
+    severity: "high"
+    category: "security"
+    exclude_paths:
+      - "tests/"
+      - "scripts/"
+
+  # ── Style Rules ─────────────────────────────────────────────────────────────
+
+  - id: "custom005"
+    name: "no-print-statements"
+    description: >
+      Use the logging module instead of print() for all output.
+      print() goes to stdout without timestamps or severity levels.
+    pattern: "print("
+    severity: "low"
+    category: "style"
+    exclude_paths:
+      - "tests/"
+      - "scripts/"
+      - "synexian/cli.py"      # CLI uses Rich, not print()
+
+  - id: "custom006"
+    name: "no-bare-except"
+    description: >
+      Always catch specific exception types. Bare except: catches
+      SystemExit and KeyboardInterrupt which should propagate.
+    pattern: "except:"
+    severity: "high"
+    category: "security"
+    exclude_paths:
+      - "tests/"
+
+  # ── Quality Rules ────────────────────────────────────────────────────────────
+
+  - id: "custom007"
+    name: "no-todo-in-production"
+    description: "TODO comments indicate incomplete implementation."
+    patterns:
+      - "# TODO"
+      - "# FIXME"
+      - "# HACK"
+      - "# XXX"
+    severity: "info"
+    category: "style"
+    exclude_paths:
+      - "tests/"
+
+  - id: "custom008"
+    name: "no-type-ignore-comments"
+    description: "type: ignore suppresses type checker warnings without fixing them."
+    pattern: "# type: ignore"
+    severity: "low"
+    category: "style"
+    exclude_paths:
+      - "tests/"
