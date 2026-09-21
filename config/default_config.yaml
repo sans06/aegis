@@ -1,0 +1,186 @@
+# Synexian Default Configuration File
+
+#======================================
+# © 2026 Synexian Labs Private Limited
+# Proprietary and Confidential
+
+# Analysis Configuration
+analysis:
+  # File patterns to include
+  file_patterns:
+    - "**/*.py"
+
+  # Patterns to ignore (gitignore-style)
+  ignore_patterns:
+    - "**/__pycache__/**"
+    - "**/venv/**"
+    - "**/.venv/**"
+    - "**/node_modules/**"
+    - "**/.git/**"
+    - "**/dist/**"
+    - "**/build/**"
+    - "**/*.egg-info/**"
+    - "**/.pytest_cache/**"
+    - "**/.mypy_cache/**"
+    - "**/.ruff_cache/**"
+
+  # Maximum file size to analyze (in KB)
+  max_file_size_kb: 1000
+
+# Analyzer Configuration
+analyzers:
+  # Code Complexity Analysis
+  complexity:
+    enabled: true
+    thresholds:
+      cyclomatic_complexity: 10
+      cognitive_complexity: 15
+      halstead_difficulty: 20
+    options:
+      include_class_methods: true
+
+  # Security & Vulnerability Scanning
+  security:
+    enabled: true
+    thresholds:
+      critical_issues: 0
+      high_issues: 5
+    options:
+      check_dependencies: true
+      owasp_checks:
+        - injection
+        - broken_auth
+        - sensitive_data
+        - xxe
+        - broken_access
+        - security_misconfig
+        - xss
+        - insecure_deserialization
+        - vulnerable_components
+        - insufficient_logging
+
+  # Code Style & Linting
+  style:
+    enabled: true
+    thresholds:
+      pep8_violations_per_kloc: 10
+    options:
+      max_line_length: 100
+      enforce_naming: true
+      check_docstrings: true
+
+  # Architecture & Design Patterns
+  architecture:
+    enabled: true
+    options:
+      check_solid: true
+      detect_patterns: true
+      analyze_dependencies: true
+      max_dependency_depth: 5
+
+  # Edge Cases & Boundary Value Analysis
+  edge_cases:
+    enabled: true
+    options:
+      check_boundary_values: true
+      check_null_handling: true
+      check_exception_handling: true
+      check_input_validation: true
+
+  # Test Quality & Mutation Coverage (UNIQUE)
+  test_quality:
+    enabled: true
+    thresholds:
+      code_coverage: 80
+      mutation_score: 70
+      assertion_strength: 0.7
+    options:
+      run_mutation_testing: true
+      check_assertion_strength: true
+      analyze_test_patterns: true
+
+  # Cognitive Load & Maintainability (UNIQUE)
+  cognitive_load:
+    enabled: true
+    thresholds:
+      maintainability_index: 65
+      readability_score: 70
+      documentation_coverage: 60
+    options:
+      check_documentation: true
+      check_naming_clarity: true
+      analyze_nesting_depth: true
+
+  # Custom Compliance Rules
+  custom_rules:
+    enabled: true
+    options:
+      rules_file: "config/custom_rules.yaml"
+
+# Scoring Configuration
+scoring:
+  # Weights for each analyzer (must sum to 1.0)
+  weights:
+    complexity: 0.15
+    security: 0.25
+    style: 0.10
+    architecture: 0.15
+    edge_cases: 0.10
+    test_quality: 0.15
+    cognitive_load: 0.10
+
+  # Grading scale (minimum score for each grade)
+  grading_scale:
+    A+: 95
+    A: 90
+    B+: 85
+    B: 80
+    C+: 75
+    C: 70
+    D: 60
+    F: 0
+
+# Output Configuration
+output:
+  # Output formats: cli, json, html
+  formats:
+    - cli
+
+  # Output directory for reports
+  directory: "./synexian-reports"
+
+  # Timestamp format for report filenames
+  timestamp_format: "%Y%m%d_%H%M%S"
+
+# Performance Configuration
+performance:
+  # Run analyzers in parallel
+  parallel_analyzers: true
+
+  # Maximum number of parallel workers
+  max_workers: 4
+
+  # Timeout for analysis (in seconds)
+  timeout_seconds: 300
+
+# Cache Configuration
+cache:
+  # Enable caching of AI responses and results
+  enabled: true
+
+  # Cache TTL in hours
+  ttl_hours: 24
+
+  # Cache directory
+  directory: "~/.cache/synexian"
+
+# Logging Configuration
+logging:
+  # Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  level: INFO
+
+  # Log format
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+  # Log file (optional)
+  file: "synexian.log"
